@@ -19,29 +19,47 @@ Generar y mantener changelog del proyecto: $ARGUMENTS
 - Versión del paquete: @package.json (si existe)
 - README del proyecto: @README.md (si existe y contiene referencias a versión)
 
+## Análisis de Cambios
+
+**IMPORTANTE**: Este comando está diseñado para documentar cambios ANTES de hacer commit.
+Analiza tanto commits como cambios sin commitear.
+
+1. **Leer CHANGELOG.md actual**:
+   - Extraer última versión publicada
+   - Extraer cambios documentados SOLO en:
+     - La última versión publicada
+     - La sección "Sin versión" (si existe)
+   - No es necesario revisar versiones antiguas
+
+2. **Detectar TODOS los cambios NO documentados**:
+   - ✅ Commits desde el último tag (si existe)
+   - ✅ Archivos modificados sin commitear (`git diff`)
+   - ✅ Archivos en staging area (`git diff --cached`)
+
+3. **Filtrar cambios ya documentados**:
+   - Comparar solo contra la última versión + sección "Sin versión"
+   - Evitar duplicados por contenido semántico, no solo texto exacto
+   - Ejemplos de duplicados semánticos:
+     - Commit: "feat: add dark mode" ≈ CHANGELOG: "Dark mode toggle"
+     - Archivo: `update-changelog.md` ≈ CHANGELOG: "Mejoras en comando update-changelog"
+
+4. **Presentar cambios al usuario**:
+   - Listar claramente QUÉ cambios están sin documentar
+   - Especificar si vienen de commits o de archivos modificados
+   - Si todos los cambios ya están documentados, informarlo
+
 ## Detección de Versión
 
 1. **Si NO se proporciona versión en $ARGUMENTS**:
-   - Leer CHANGELOG.md y extraer:
-     - La última versión publicada
-     - TODOS los cambios ya documentados (en todas las versiones)
-     - Entradas en sección "Sin versión"
-   - Analizar TODOS los cambios desde la última versión:
-     - Commits recientes desde el último tag
-     - Cambios sin commitear (working directory)
-     - Cambios en staging area
-   - **Filtrar cambios ya documentados**:
-     - Comparar commits con entradas existentes en CHANGELOG
-     - Solo considerar cambios NO documentados para la sugerencia de versión
-     - Evitar duplicar entradas que ya están en el CHANGELOG
-   - Sugerir la siguiente versión según semantic versioning basándose en cambios NO documentados:
+   - Sugerir siguiente versión según semantic versioning basándose en cambios NO documentados:
      - **MAJOR** (X.0.0): Cambios incompatibles o breaking changes
      - **MINOR** (x.Y.0): Nueva funcionalidad compatible
-     - **PATCH** (x.y.Z): Correcciones de bugs
+     - **PATCH** (x.y.Z): Correcciones de bugs o documentación
    - Usar AskUserQuestion para confirmar versión sugerida o permitir especificar otra
 
 2. **Si se proporciona versión en $ARGUMENTS**:
    - Usar la versión indicada directamente
+   - No preguntar, proceder con esa versión
 
 ## Actualización de README
 

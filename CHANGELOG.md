@@ -6,6 +6,13 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 > Ver TODO.md
 
 ---
+## [v1.0.1] - 2026-02-15
+> Mejoras en documentación y skill de configuración.
+
+### Cambios
+- Actualizada documentación de instalación con instrucciones más claras
+
+---
 ## [v1.0.0] - 2026-02-15
 > Lanzamiento inicial de los plugins de Claude Code para desarrollo con Drupal.
 
