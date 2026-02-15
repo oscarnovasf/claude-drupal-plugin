@@ -1,0 +1,32 @@
+{
+    "mcpServers": {
+        "context7": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "env": {
+                "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+            }
+        },
+        "obsidian": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "@mauricio.wolff/mcp-obsidian@latest",
+                "${OBSIDIAN_VAULT_PATH}"
+            ]
+        },
+        "playwright": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@playwright/mcp@latest"
+            ],
+            "env": {}
+        }
+    }
+}

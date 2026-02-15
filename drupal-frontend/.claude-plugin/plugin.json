@@ -1,0 +1,9 @@
+{
+    "name": "drupal-frontend",
+    "description": "Plugin especializado en desarrollo frontend con Drupal: theming, Twig, CSS/JS, componentes, bibliotecas, responsive design y accesibilidad.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Óscar Novás",
+        "email": "hola@oscarnovas.com"
+    }
+}

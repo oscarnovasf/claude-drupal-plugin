@@ -1,0 +1,34 @@
+# Archivos de diferentes IDEs.
+/.idea/
+/.vscode/**
+!/.vscode/tasks.json
+!/.vscode/copilot-commit-instructions.md
+.editorconfig
+*.un~
+
+# Logs.
+/logs/
+/web/error_log
+/error_log
+*.log
+*.bak
+
+# Archivos del SO.
+.DS_Store
+[Tt]humbs.db
+._*
+
+# Paquetes
+*.7z
+*.dmg
+*.gz
+*.bz2
+*.iso
+*.jar
+*.rar
+*.tar
+*.tgz
+*.zip
+
+# Varios.
+.wakatime-project

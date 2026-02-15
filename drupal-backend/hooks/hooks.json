@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "name": "protect-files-drupal-backend",
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/drupal-backend/hooks/scripts/protect-files.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

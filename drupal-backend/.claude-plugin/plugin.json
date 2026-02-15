@@ -1,0 +1,9 @@
+{
+    "name": "drupal-backend",
+    "description": "Plugin especializado en desarrollo backend con Drupal: APIs, servicios, plugins, hooks, migraciones, configuración y buenas prácticas del lado servidor.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Óscar Novás",
+        "email": "hola@oscarnovas.com"
+    }
+}

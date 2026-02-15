@@ -1,0 +1,71 @@
+{
+    "name": "drupal-tools",
+    "owner": {
+        "name": "Óscar Novás",
+        "email": "hola@oscarnovas.com"
+    },
+    "metadata": {
+        "description": "Colección de plugins de Claude Code para desarrollo con Drupal: backend y frontend, con componentes compartidos.",
+        "version": "1.0.0"
+    },
+    "plugins": [
+        {
+            "name": "drupal-backend",
+            "source": "./",
+            "description": "Plugin especializado en desarrollo backend con Drupal: APIs, servicios, plugins, hooks, migraciones, configuración y buenas prácticas del lado servidor.",
+            "version": "1.0.0",
+            "author": {
+                "name": "Óscar Novás",
+                "email": "hola@oscarnovas.com"
+            },
+            "keywords": ["drupal", "backend", "php", "api", "services", "migrations"],
+            "commands": [
+                "./shared/commands/",
+                "./drupal-backend/commands/"
+            ],
+            "agents": [
+                "./shared/agents/context7.md",
+                "./drupal-backend/agents/drupal-backend.md"
+            ],
+            "skills": [
+                "./shared/skills/",
+                "./drupal-backend/skills/"
+            ],
+            "hooks": [
+                "./shared/hooks/hooks.json",
+                "./drupal-backend/hooks/hooks.json"
+            ],
+            "mcpServers": "./shared/.mcp.json",
+            "strict": false
+        },
+        {
+            "name": "drupal-frontend",
+            "source": "./",
+            "description": "Plugin especializado en desarrollo frontend con Drupal: theming, Twig, CSS/JS, componentes, bibliotecas, responsive design y accesibilidad.",
+            "version": "1.0.0",
+            "author": {
+                "name": "Óscar Novás",
+                "email": "hola@oscarnovas.com"
+            },
+            "keywords": ["drupal", "frontend", "twig", "css", "javascript", "theming", "accessibility"],
+            "commands": [
+                "./shared/commands/",
+                "./drupal-frontend/commands/"
+            ],
+            "agents": [
+                "./shared/agents/context7.md",
+                "./drupal-frontend/agents/drupal-frontend.md"
+            ],
+            "skills": [
+                "./shared/skills/",
+                "./drupal-frontend/skills/"
+            ],
+            "hooks": [
+                "./shared/hooks/hooks.json",
+                "./drupal-frontend/hooks/hooks.json"
+            ],
+            "mcpServers": "./shared/.mcp.json",
+            "strict": false
+        }
+    ]
+}
