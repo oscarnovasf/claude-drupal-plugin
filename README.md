@@ -67,9 +67,8 @@ drupal-tools/
 │   ├── .claude-plugin/plugin.json
 │   ├── agents/
 │   │   └── drupal-backend.md       # Agente experto en backend Drupal
-│   ├── commands/
-│   │   └── migration.md            # Generador de migraciones
-│   ├── skills/
+│   ├── commands/                   # (vacío por ahora, preparado para futuros comandos)
+│   ├── skills/                     # (vacío por ahora, preparado para futuros skills)
 │   └── hooks/
 │       ├── hooks.json              # Configuración de hooks backend
 │       └── scripts/
@@ -80,7 +79,7 @@ drupal-tools/
     │   └── drupal-frontend.md      # Agente experto en frontend Drupal
     ├── commands/
     │   └── component.md            # Generador de SDC (Single Directory Components)
-    ├── skills/
+    ├── skills/                     # (vacío por ahora, preparado para futuros skills)
     └── hooks/
         ├── hooks.json              # Configuración de hooks frontend
         └── scripts/
@@ -95,24 +94,36 @@ Los tres plugins están **completamente separados**:
 - ✅ **Instalación selectiva**: Instala solo lo que necesites
 - ✅ **Mantenimiento independiente**: Cada plugin puede actualizarse por separado
 
-```
-┌─────────────────────────────────────────────────┐
-│         drupal-global (requerido)               │
-│  MCPs: Context7, Obsidian, Playwright           │
-│  Agents: context7                               │
-│  Commands: drupal-setup, update-changelog       │
-│  Skills: drupal-setup, change-name              │
-│  Hooks: protección base                         │
-├────────────────────┬────────────────────────────┤
-│   drupal-backend   │     drupal-frontend        │
-│     (opcional)     │        (opcional)          │
-│  + drupal-backend  │  + drupal-frontend agent   │
-│    agent           │  + theme-scaffold cmd      │
-│  + module-scaffold │  + component cmd           │
-│    cmd             │  + hooks frontend          │
-│  + migration cmd   │                            │
-│  + hooks backend   │                            │
-└────────────────────┴────────────────────────────┘
+```mermaid
+graph TB
+    subgraph global["🌐 drupal-global (requerido)"]
+        direction TB
+        mcp["📦 MCPs<br/>Context7, Obsidian, Playwright"]
+        agent_g["🤖 Agent: context7"]
+        cmd_g["⚡ Commands<br/>drupal-setup, update-changelog"]
+        skill_g["🛠️ Skills<br/>drupal-setup, change-name"]
+        hook_g["🛡️ Hooks: protección base"]
+    end
+
+    subgraph backend["⚙️ drupal-backend (opcional)"]
+        direction TB
+        agent_b["🤖 Agent: drupal-backend"]
+        hook_b["🛡️ Hooks backend"]
+    end
+
+    subgraph frontend["🎨 drupal-frontend (opcional)"]
+        direction TB
+        agent_f["🤖 Agent: drupal-frontend"]
+        cmd_f["⚡ Command: component"]
+        hook_f["🛡️ Hooks frontend"]
+    end
+
+    global -.->|requiere| backend
+    global -.->|requiere| frontend
+
+    style global fill:#e1f5e1,stroke:#4caf50,stroke-width:3px
+    style backend fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style frontend fill:#fff3e0,stroke:#ff9800,stroke-width:2px
 ```
 
 > **Nota**: `drupal-backend` y `drupal-frontend` requieren que `drupal-global` esté instalado para funcionar correctamente.
@@ -257,13 +268,6 @@ Plugin especializado en desarrollo backend.
 |--------|-------------|
 | **drupal-backend** | Experto en backend Drupal: módulos custom, plugins, servicios, Entity API, migraciones, configuración y seguridad. |
 
-#### Comandos
-
-| Comando | Descripción |
-|---------|-------------|
-| **/module-scaffold** | Genera la estructura completa de un módulo custom con todos los archivos boilerplate. |
-| **/migration** | Genera configuración de migración y plugins para importar contenido desde fuentes externas. |
-
 #### Hooks de protección adicionales
 
 Script: `drupal-backend/hooks/scripts/protect-files.sh`. Además de los hooks
@@ -271,6 +275,7 @@ compartidos, protege:
 - `*/core/*` (núcleo de Drupal)
 - `*/sites/default/default.settings.php`
 - `*/sites/default/default.services.yml`
+- `*/sites/default/settings.ddev.php`
 
 ---
 
@@ -288,8 +293,7 @@ Plugin especializado en desarrollo frontend.
 
 | Comando | Descripción |
 |---------|-------------|
-| **/theme-scaffold** | Genera la estructura completa de un tema custom con templates, CSS, JS y breakpoints. |
-| **/component** | Genera un Single Directory Component (SDC) con template, estilos y schema. |
+| **/component** | Genera un Single Directory Component (SDC) con template Twig, estilos, JavaScript y schema de componente. |
 
 #### Hooks de protección adicionales
 
