@@ -13,16 +13,15 @@ drupal-tools
 ## Descripción
 
 Colección de plugins para Claude Code orientados al desarrollo con Drupal.
-El marketplace ofrece dos plugins especializados que comparten una base común
-de componentes:
+El marketplace ofrece tres plugins modulares:
 
 | Plugin | Descripción |
 |--------|-------------|
-| **drupal-backend** | Especializado en backend: módulos, APIs, servicios, migraciones |
-| **drupal-frontend** | Especializado en frontend: theming, Twig, CSS/JS, accesibilidad |
+| **drupal-global** | Base común: MCPs (Context7, Obsidian, Playwright), agentes, comandos y skills compartidos |
+| **drupal-backend** | Especializado en backend: módulos, APIs, servicios, migraciones (requiere drupal-global) |
+| **drupal-frontend** | Especializado en frontend: theming, Twig, CSS/JS, accesibilidad (requiere drupal-global) |
 
-Ambos plugins incluyen automáticamente los componentes compartidos (MCPs,
-agentes, comandos y hooks) del directorio `shared/`.
+Los plugins `drupal-backend` y `drupal-frontend` **requieren drupal-global**. Debes instalar `drupal-global` primero, o instalarlos todos juntos si haces desarrollo full-stack.
 
 ---
 
@@ -45,8 +44,9 @@ Los plugins de Claude Code pueden incluir los siguientes tipos de componentes:
 ```
 drupal-tools/
 ├── .claude-plugin/
-│   └── marketplace.json            # Registro de los 2 plugins
-├── shared/                         # Componentes compartidos (no es un plugin)
+│   └── marketplace.json            # Registro de los 3 plugins
+├── drupal-global/                  # Plugin base con componentes compartidos
+│   ├── .claude-plugin/plugin.json
 │   ├── .mcp.json                   # MCPs: Context7, Obsidian, Playwright
 │   ├── agents/
 │   │   └── context7.md             # Agente experto en documentación
@@ -63,7 +63,7 @@ drupal-tools/
 │       ├── hooks.json              # Configuración de hooks compartidos
 │       └── scripts/
 │           └── protect-files.sh     # Protección: node_modules, vendor, .git
-├── drupal-backend/                 # Plugin backend
+├── drupal-backend/                 # Plugin backend (depende de drupal-global)
 │   ├── .claude-plugin/plugin.json
 │   ├── agents/
 │   │   └── drupal-backend.md       # Agente experto en backend Drupal
@@ -74,7 +74,7 @@ drupal-tools/
 │       ├── hooks.json              # Configuración de hooks backend
 │       └── scripts/
 │           └── protect-files.sh     # Protección: core, default.settings.php
-└── drupal-frontend/                # Plugin frontend
+└── drupal-frontend/                # Plugin frontend (depende de drupal-global)
     ├── .claude-plugin/plugin.json
     ├── agents/
     │   └── drupal-frontend.md      # Agente experto en frontend Drupal
@@ -87,21 +87,17 @@ drupal-tools/
             └── protect-files.sh     # Protección: core, dist, build
 ```
 
-### Herencia de componentes
+### Sistema modular
 
-Los plugins `drupal-backend` y `drupal-frontend` **incluyen automáticamente**
-todos los componentes de `shared/` gracias a la configuración `strict: false`
-en el marketplace. Al instalar cualquiera de los dos plugins obtienes:
+Los tres plugins están **completamente separados**:
 
-- Todos los **agentes** de shared + los propios del plugin
-- Todos los **comandos** de shared + los propios del plugin
-- Todos los **skills** de shared + los propios del plugin
-- Todos los **hooks** de shared + los propios del plugin
-- Todos los **MCPs** de shared (Context7, Obsidian, Playwright)
+- ✅ **Sin duplicación**: Al instalar drupal-global, los MCPs solo se registran una vez
+- ✅ **Instalación selectiva**: Instala solo lo que necesites
+- ✅ **Mantenimiento independiente**: Cada plugin puede actualizarse por separado
 
 ```
 ┌─────────────────────────────────────────────────┐
-│              shared/ (no es plugin)             │
+│         drupal-global (requerido)               │
 │  MCPs: Context7, Obsidian, Playwright           │
 │  Agents: context7                               │
 │  Commands: drupal-setup, update-changelog       │
@@ -109,6 +105,7 @@ en el marketplace. Al instalar cualquiera de los dos plugins obtienes:
 │  Hooks: protección base                         │
 ├────────────────────┬────────────────────────────┤
 │   drupal-backend   │     drupal-frontend        │
+│     (opcional)     │        (opcional)          │
 │  + drupal-backend  │  + drupal-frontend agent   │
 │    agent           │  + theme-scaffold cmd      │
 │  + module-scaffold │  + component cmd           │
@@ -117,6 +114,8 @@ en el marketplace. Al instalar cualquiera de los dos plugins obtienes:
 │  + hooks backend   │                            │
 └────────────────────┴────────────────────────────┘
 ```
+
+> **Nota**: `drupal-backend` y `drupal-frontend` requieren que `drupal-global` esté instalado para funcionar correctamente.
 
 ---
 
@@ -137,17 +136,33 @@ claude plugin marketplace add https://github.com/oscarnovasf/claude-drupal-plugi
 
 ### 2. Instalar el plugin que necesites
 
+#### Opción A: Solo componentes base
 ```bash
-# Backend
+claude plugin install drupal-global@drupal-tools
+```
+
+#### Opción B: Backend (requiere drupal-global)
+```bash
+claude plugin install drupal-global@drupal-tools
 claude plugin install drupal-backend@drupal-tools
+```
 
-# Frontend
+#### Opción C: Frontend (requiere drupal-global)
+```bash
+claude plugin install drupal-global@drupal-tools
 claude plugin install drupal-frontend@drupal-tools
+```
 
-# Ambos (para full-stack)
+#### Opción D: Full-stack (backend + frontend)
+```bash
+claude plugin install drupal-global@drupal-tools
 claude plugin install drupal-backend@drupal-tools
 claude plugin install drupal-frontend@drupal-tools
 ```
+
+> **Importante**: `drupal-global` contiene los MCPs y componentes comunes. Al tener los 3 plugins separados, los MCPs solo se cargan **una vez** sin duplicación.
+>
+> **Nota**: Debes instalar `drupal-global` **antes** de instalar `drupal-backend` o `drupal-frontend`. Claude Code aún no soporta dependencias automáticas entre plugins (ver sección [Nota técnica sobre dependencias](#nota-técnica-sobre-dependencias)).
 
 ### 3. Scopes de instalación
 
@@ -169,11 +184,14 @@ claude plugin install drupal-backend@drupal-tools --scope local
 Para actualizar a la última versión publicada:
 
 ```bash
+# Actualizar drupal-global (hazlo primero si tienes backend o frontend instalados)
+claude plugin update drupal-global@drupal-tools
+
 # Actualizar un plugin específico
 claude plugin update drupal-backend@drupal-tools
 claude plugin update drupal-frontend@drupal-tools
 
-# Actualizar todos los plugins
+# Actualizar todos los plugins del marketplace
 claude plugin update --all
 ```
 
@@ -181,10 +199,10 @@ claude plugin update --all
 
 ---
 
-## Componentes compartidos (shared/)
+## Plugin drupal-global
 
-El directorio `shared/` no es un plugin instalable. Es un directorio de
-recursos comunes que ambos plugins heredan automáticamente.
+El plugin `drupal-global` es la base común para `drupal-backend` y `drupal-frontend`.
+Contiene todos los MCPs, agentes, comandos y skills compartidos.
 
 ### MCPs incluidos
 
@@ -216,7 +234,7 @@ recursos comunes que ambos plugins heredan automáticamente.
 
 ### Hooks de protección base
 
-La lógica de protección está en `shared/hooks/scripts/protect-files.sh`.
+La lógica de protección está en `drupal-global/hooks/scripts/protect-files.sh`.
 Archivos protegidos contra modificación:
 - `*/node_modules/*`
 - `*/vendor/*`
@@ -346,20 +364,59 @@ prefieras:
 
 ---
 
-## Cómo funciona la herencia
+## Cómo funciona la arquitectura modular
 
-Claude Code **no tiene un sistema nativo de dependencias** entre plugins. La
-herencia de componentes compartidos se consigue mediante dos mecanismos:
+La arquitectura se basa en **3 plugins independientes** dentro del mismo marketplace:
 
-1. El `source` de ambos plugins apunta a la **raíz del marketplace** (`"./"`),
-   no a su propio directorio. Así, al instalar un plugin se copia todo el
-   repositorio (incluyendo `shared/`) al caché de Claude Code.
-2. Con `strict: false`, el marketplace define **completamente** los componentes
-   del plugin. Los arrays de `commands`, `agents`, `skills` y `hooks` listan
-   rutas de `shared/` junto con las del propio plugin.
+1. **drupal-global** es un plugin standalone que contiene:
+   - MCPs (Context7, Obsidian, Playwright)
+   - Agente context7
+   - Comandos y skills compartidos
+   - Hooks de protección base
 
-El resultado es que `shared/` actúa como una librería interna de componentes
-que ambos plugins consumen, sin ser un plugin instalable por separado.
+2. **drupal-backend** y **drupal-frontend** son plugins especializados que:
+   - Añaden sus propios agentes, comandos, skills y hooks específicos
+   - **Requieren** que drupal-global esté instalado (validación manual del usuario)
+   - No duplican los MCPs porque solo drupal-global los registra
+
+3. El `source` de los tres plugins apunta a la **raíz del marketplace** (`"./"`),
+   permitiendo que todos accedan a sus respectivos directorios tras la instalación.
+
+Esta arquitectura garantiza que los MCPs solo se carguen **una vez**, evitando
+duplicación y conflictos.
+
+### Nota técnica sobre dependencias
+
+**Estado actual (2025)**: Claude Code aún no soporta un campo `dependencies`
+nativo entre plugins (ver [issue #9444](https://github.com/anthropics/claude-code/issues/9444)).
+
+**Nuestra solución**: Usamos el workaround recomendado por la comunidad:
+- Los 3 plugins usan `"source": "./"` (apuntan a la raíz del marketplace)
+- Configuramos `"strict": false` para permitir rutas flexibles
+- `drupal-global` registra los MCPs una sola vez
+- `drupal-backend` y `drupal-frontend` solo registran sus componentes específicos
+
+**Ventajas de nuestra arquitectura**:
+- ✅ Sin duplicación de MCPs (están solo en drupal-global)
+- ✅ Instalación modular (instala solo lo que necesites)
+- ✅ Validación exitosa con `claude plugin validate`
+- ✅ Preparado para migrar a `dependencies` cuando esté disponible
+
+**Limitación actual**: Los usuarios deben instalar manualmente `drupal-global`
+antes de `drupal-backend` o `drupal-frontend`. Cuando Claude Code implemente el
+sistema de dependencias nativo, actualizaremos el marketplace para usar:
+
+```json
+{
+  "name": "drupal-backend",
+  "dependencies": {
+    "drupal-global": "^1.0.0"
+  }
+}
+```
+
+Esto permitirá la instalación automática de dependencias, pero por ahora nuestra
+solución es la mejor práctica disponible.
 
 ---
 
@@ -394,8 +451,8 @@ claude plugin install drupal-backend@drupal-tools
 
 [mi-web]: https://oscarnovas.com "for developers"
 
-[version]: v1.0.1
-[version-badge]: https://img.shields.io/badge/Versión-1.0.1-blue.svg
+[version]: v1.1.0
+[version-badge]: https://img.shields.io/badge/Versión-1.1.0-blue.svg
 
 [license]: LICENSE.md
 [license-badge]: https://img.shields.io/badge/Licencia-GPLv3+-green.svg "Leer la licencia"

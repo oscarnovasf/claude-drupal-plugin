@@ -6,6 +6,37 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 > Ver TODO.md
 
 ---
+## [v1.1.0] - 2026-02-15
+> Refactorización de arquitectura: sistema modular de 3 plugins independientes.
+
+### Cambios
+- **BREAKING CHANGE**: Directorio `shared/` renombrado a `drupal-global/`
+  - `shared/` ya no existe, todos los componentes movidos a `drupal-global/`
+  - Los usuarios deben desinstalar versiones anteriores antes de actualizar
+- Refactorizada arquitectura del marketplace con 3 plugins completamente separados:
+  - `drupal-global`: Plugin base con MCPs y componentes compartidos
+  - `drupal-backend`: Plugin especializado backend (requiere drupal-global)
+  - `drupal-frontend`: Plugin especializado frontend (requiere drupal-global)
+- Eliminada duplicación de MCPs: ahora solo se registran en `drupal-global`
+- Los plugins `drupal-backend` y `drupal-frontend` ya no incluyen `mcpServers`
+- Actualizada versión del marketplace y todos los plugins a v1.1.0
+
+### Añadido
+- Nuevo plugin `drupal-global` (anteriormente componentes en `shared/`)
+- Sección técnica en README sobre dependencias entre plugins
+- Documentación del workaround actual para dependencias (issue #9444)
+- Nota sobre instalación secuencial de plugins (drupal-global primero)
+- Referencia a GitHub issue sobre sistema de dependencias futuro
+- Plan de migración cuando se implemente campo `dependencies` nativo
+
+### Documentación
+- Actualizada arquitectura modular en README.md
+- Nuevas instrucciones de instalación con 4 opciones (A/B/C/D)
+- Diagrama actualizado mostrando los 3 plugins independientes
+- Explicación detallada de ventajas de la arquitectura modular
+- Sección "Nota técnica sobre dependencias" con estado actual y futuro
+
+---
 ## [v1.0.1] - 2026-02-15
 > Mejoras en documentación y skill de configuración.
 

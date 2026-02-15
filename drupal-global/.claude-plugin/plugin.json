@@ -1,0 +1,10 @@
+{
+    "name": "drupal-global",
+    "description": "Componentes globales para desarrollo con Drupal: MCPs (Context7, Obsidian, Playwright), agentes, comandos y skills comunes para backend y frontend.",
+    "version": "1.1.0",
+    "author": {
+        "name": "Óscar Novás",
+        "email": "hola@oscarnovas.com"
+    },
+    "keywords": ["drupal", "global", "base", "context7", "obsidian", "playwright"]
+}
