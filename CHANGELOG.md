@@ -59,7 +59,7 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
   - Explicación de arquitectura de plugins de Claude Code (agentes, comandos, skills, hooks, MCPs)
   - Estructura de directorios completa con ejemplos
   - Diagrama visual de herencia de componentes
-  - Guía de instalación paso a paso con GitLab
+  - Guía de instalación paso a paso con GitHub
   - Configuración de variables de entorno (Context7, Obsidian)
   - Sistema de permisos por scope (usuario, proyecto, local)
   - Explicación del mecanismo de herencia sin sistema nativo de dependencias

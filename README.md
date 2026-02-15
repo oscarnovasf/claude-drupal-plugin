@@ -132,7 +132,7 @@ en el marketplace. Al instalar cualquiera de los dos plugins obtienes:
 ### 1. Añadir el marketplace
 
 ```bash
-claude plugin marketplace add https://gitlab.com/oscarnovasf/claude-drupal-plugin.git
+claude plugin marketplace add https://github.com/oscarnovasf/claude-drupal-plugin.git
 ```
 
 ### 2. Instalar el plugin que necesites
@@ -163,6 +163,21 @@ claude plugin install drupal-backend@drupal-tools --scope project
 # Local (solo este proyecto, no se versiona)
 claude plugin install drupal-backend@drupal-tools --scope local
 ```
+
+### 4. Actualizar el plugin
+
+Para actualizar a la última versión publicada:
+
+```bash
+# Actualizar un plugin específico
+claude plugin update drupal-backend@drupal-tools
+claude plugin update drupal-frontend@drupal-tools
+
+# Actualizar todos los plugins
+claude plugin update --all
+```
+
+> **Nota**: El comando `update` descarga e instala la versión más reciente desde el marketplace. Si has modificado el plugin localmente, esos cambios se perderán. Para desarrollo activo del plugin, consulta la sección [Desarrollo](#desarrollo).
 
 ---
 
