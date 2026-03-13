@@ -3,6 +3,7 @@ name: playwright
 description: >
   Playwright E2E testing patterns para Drupal.
   Trigger: Cuando se escriben tests E2E - Page Objects, selectores, workflow MCP.
+user-invocable: false
 ---
 
 ## MCP Workflow (OBLIGATORIO si está disponible)
@@ -27,17 +28,71 @@ description: >
 - ✅ Prevenir tests inestables — exploración real = tests estables
 - ❌ Nunca asumir cómo "debería" funcionar la UI de Drupal
 
+## Setup Inicial (VERIFICAR ANTES DE CREAR TESTS)
+
+**Antes de escribir cualquier test, verificar que los archivos base existen.
+Si no existen, crearlos a partir de las plantillas de esta skill.**
+
+### Checklist de archivos base
+
+| Archivo | Ubicación | Acción si no existe |
+|---------|-----------|---------------------|
+| `playwright.config.ts` | raíz del proyecto | Crear desde plantilla — no requiere adaptaciones |
+| `environment.ts` | `tests/playwright/_config/` | Crear desde plantilla — ajustar URLs por entorno (DEV/STG/PRO) y usuarios |
+| `global-setup.ts` | `tests/playwright/_config/` | Crear desde plantilla |
+| `global-teardown.ts` | `tests/playwright/_config/` | Crear desde plantilla |
+| `helpers.ts` | `tests/playwright/_shared/` | Crear desde plantilla |
+
+### Qué contiene cada plantilla
+
+**`playwright.config.ts`** — Configuración principal: multi-navegador (chromium, firefox, webkit),
+proyecto `smoke` como gate, reportes HTML, trace/video/screenshot solo en fallo. La `baseURL` se
+resuelve automáticamente desde `DDEV_PRIMARY_URL` (si existe) o desde `environment.ts`.
+
+**`environment.ts`** — Clase `Environment` con configuraciones por entorno (DEV/STG/PRO):
+`baseURL`, credenciales de usuarios (`manager`, `user`) y rutas comunes (`/user/login`, `/user/logout`).
+
+**`global-setup.ts` / `global-teardown.ts`** — Ejecutan `drush status` / `drush cr` adaptándose
+automáticamente a CI, contenedor DDEV o host.
+
+**`helpers.ts`** — Funciones `login(page, user)` y `logout(page)` con manejo del banner de cookies.
+
+### Adaptaciones obligatorias al crear desde plantilla
+
+```typescript
+// En environment.ts — reemplazar URLs y credenciales reales:
+DEV: {
+  baseURL: "https://proyecto.ddev.site",   // ← adaptar
+  users: {
+    manager: { name: 'admin', pass: '****' }, // ← adaptar
+    user:    { name: 'user',  pass: '****' },  // ← adaptar
+  }
+},
+```
+
+> **Nota DDEV**: `DDEV_PRIMARY_URL` tiene prioridad sobre la `baseURL` de `environment.ts`.
+> En proyectos DDEV no hace falta tocar ningún archivo de configuración para la URL.
+
 ## Estructura de Archivos
 
 ```
-tests/
-├── base-page.ts              # Clase padre para TODAS las páginas
-├── helpers.ts                # Utilidades compartidas
-└── {page-name}/
-    ├── {page-name}-page.ts   # Page Object Model
-    ├── {page-name}.spec.ts   # TODOS los tests aquí (sin archivos separados)
-    └── {page-name}.md        # Documentación de tests
+tests/playwright/
+├── _config/
+│   ├── environment.ts          # Configuración de entornos (URLs, usuarios)
+│   ├── global-setup.ts         # Tareas previas a la suite (ej: drush status)
+│   └── global-teardown.ts      # Tareas posteriores a la suite (ej: drush cr)
+├── _shared/
+│   ├── base-page.ts            # Clase padre para todos los Page Objects
+│   └── helpers.ts              # Utilidades compartidas (login, logout, etc.)
+└── {nombre-pagina}/
+    ├── {nombre-pagina}-page.ts # Page Object Model de la página
+    ├── {nombre-pagina}.spec.ts # Tests de la página, TODOS los tests aquí (sin archivos separados)
+    └── {nombre-pagina}.md      # Documentación de los tests
 ```
+
+Cada página o sección de la aplicación tiene su propia carpeta con el Page Object,
+los tests y su documentación. Los Page Objects extienden `base-page.ts` para
+heredar comportamiento común.
 
 **Nomenclatura:**
 - ✅ `node-form.spec.ts` (todos los tests del formulario de nodo)
@@ -48,27 +103,31 @@ tests/
 ## Prioridad de Selectores (OBLIGATORIO)
 
 ```typescript
-// 1. MEJOR — getByRole para elementos interactivos
+// 1. MEJOR — getByTestId cuando el elemento tiene atributo pw-id
+//    (configurado como testIdAttribute en playwright.config.ts)
+this.widget     = page.getByTestId("date-picker");   // <div pw-id="date-picker">
+
+// 2. MEJOR — getByRole para elementos interactivos sin pw-id
 this.saveButton = page.getByRole("button", { name: "Save" });
 this.adminLink  = page.getByRole("link", { name: "Content" });
 
-// 2. MEJOR — getByLabel para controles de formulario
+// 3. MEJOR — getByLabel para controles de formulario sin pw-id
 this.titleInput = page.getByLabel("Title");
 this.bodyField  = page.getByLabel("Body");
 
-// 3. CON MODERACIÓN — getByText para contenido estático
+// 4. CON MODERACIÓN — getByText solo para contenido estático
 this.errorMsg   = page.getByText("This field is required");
 
-// 4. ÚLTIMO RECURSO — getByTestId cuando lo anterior falla
-this.widget     = page.getByTestId("date-picker");
-
 // ❌ EVITAR selectores frágiles
-this.btn   = page.locator(".button--primary");  // NO
-this.input = page.locator("#edit-title-0-value"); // NO (IDs de Drupal cambian)
+this.btn   = page.locator(".button--primary");        // NO
+this.input = page.locator("#edit-title-0-value");     // NO (IDs de Drupal cambian)
 ```
 
+> **Nota**: `pw-id` es el atributo más estable — fue añadido explícitamente para testing y
+> no cambia con refactors de UI ni con actualizaciones de Drupal. Usarlo siempre que esté disponible.
+>
 > **Nota Drupal**: Los IDs generados por Drupal (ej. `#edit-field-x-0-value`) son
-> inestables entre versiones. Preferir roles y labels siempre.
+> inestables entre versiones. Nunca usarlos como selectores.
 
 ## Detección de Alcance (PREGUNTAR SI AMBIGUO)
 
@@ -133,17 +192,31 @@ Siempre verificar page objects existentes antes de crear nuevos:
 
 ```typescript
 // ✅ BIEN: Reutilizar page objects existentes
+import { test, expect } from "@playwright/test";
 import { AdminLoginPage } from "../admin-login/admin-login-page";
 import { NodeFormPage }   from "../node-form/node-form-page";
 
-test("Editor can create article", async ({ page }) => {
-  const login    = new AdminLoginPage(page);
-  const nodeForm = new NodeFormPage(page);
+test.describe("Node Form", () => {
+  test(
+    "Como editor, quiero crear un artículo tras iniciar sesión",
+    { tag: ["@critical", "@e2e", "@content", "@NODE-E2E-002"] },
+    async ({ page }) => {
+      const login    = new AdminLoginPage(page);
+      const nodeForm = new NodeFormPage(page);
 
-  await login.loginAs("editor");            // REUTILIZAR
-  await nodeForm.goto("article");
-  await nodeForm.fillTitle("Test Article");
-  await nodeForm.save();
+      await test.step("Iniciar sesión como editor", async () => {
+        await login.loginAs("editor");            // REUTILIZAR
+      });
+
+      await test.step("Navegar al formulario y crear el artículo", async () => {
+        await nodeForm.goto("article");
+        await nodeForm.fillTitle("Test Article");
+        await nodeForm.save();
+        await expect(page, "Error: Tras guardar, la URL debe apuntar al nodo creado (/node/{id})")
+          .toHaveURL(/\/node\/\d+/);
+      });
+    }
+  );
 });
 
 // ❌ MAL: Recrear funcionalidad existente
@@ -152,7 +225,15 @@ export class ArticleFormPage extends BasePage {
 }
 ```
 
-## Patrón de Tests con Tags
+## Estructura de Test — Historia de Usuario (OBLIGATORIO)
+
+Cada test se estructura como una **historia de usuario** con tres niveles:
+
+| Nivel | Qué representa |
+|-------|----------------|
+| `test.describe` | La feature o página bajo prueba |
+| `test()` | Un escenario redactado como historia de usuario ("Como X, quiero Y para Z") |
+| `test.step()` | Cada paso lógico del escenario |
 
 ```typescript
 import { test, expect } from "@playwright/test";
@@ -160,26 +241,65 @@ import { NodeFormPage } from "./node-form-page";
 
 test.describe("Node Form", () => {
   test(
-    "Editor puede crear un nodo de artículo",
+    "Como editor, quiero crear un artículo para publicar contenido en el sitio",
     { tag: ["@critical", "@e2e", "@content", "@NODE-E2E-001"] },
     async ({ page }) => {
       const nodeForm = new NodeFormPage(page);
 
-      await nodeForm.goto("article");
-      await nodeForm.fillTitle("Mi artículo de prueba");
-      await nodeForm.save();
+      await test.step("Navegar al formulario de creación de artículo", async () => {
+        await nodeForm.goto("article");
+      });
 
-      await expect(page, "La URL debe ajustarse al patrón de una página de nodo").toHaveURL(/\/node\/\d+/);
+      await test.step("Rellenar el título del artículo", async () => {
+        await nodeForm.fillTitle("Mi artículo de prueba");
+      });
+
+      await test.step("Guardar el artículo y verificar la redirección", async () => {
+        await nodeForm.save();
+        await expect(page, "Error: Tras guardar, la URL debe apuntar a la página del nodo creado (/node/{id})")
+          .toHaveURL(/\/node\/\d+/);
+      });
     }
   );
 });
 ```
 
+**Reglas:**
+- ✅ Un `test.describe` por feature/página
+- ✅ Un `test()` por escenario — redactado como historia de usuario
+- ✅ Un `test.step()` por cada paso lógico del escenario
+- ❌ No agrupar múltiples escenarios en un único `test()` sin `test.step()`
+
 **Categorías de tags:**
 - Prioridad: `@critical`, `@high`, `@medium`, `@low`
 - Tipo: `@e2e`
 - Feature: `@content`, `@admin`, `@forms`, `@taxonomy`
+- Role: `@user`, `@editor`, `@admin`
 - Test ID: `@NODE-E2E-001`, `@ADMIN-E2E-002`
+
+## Mensajes en expect() (OBLIGATORIO)
+
+Todo `expect()` debe incluir un mensaje que describa el error si la aserción falla.
+Cuando el valor real es relevante, interpolarlo con template literal.
+
+```typescript
+// ✅ BIEN — mensaje descriptivo con valor real interpolado
+const response = await page.goto('/');
+expect(response?.status(), `Error: Se esperaba 200 pero la página respondió ${response?.status()}`)
+  .toBe(200);
+
+await expect(page, "Error: La URL no contiene /node/{id} tras guardar el artículo")
+  .toHaveURL(/\/node\/\d+/);
+
+await expect(titleInput, "Error: El campo título debe estar visible en el formulario")
+  .toBeVisible();
+
+// ❌ MAL — sin mensaje, el fallo no explica qué se esperaba
+expect(response?.status()).toBe(200);
+await expect(page).toHaveURL(/\/node\/\d+/);
+```
+
+**Formato:** `"Error: {qué se esperaba} [pero {valor real}]"`
 
 ## Refactoring: Cuándo Mover Código
 
