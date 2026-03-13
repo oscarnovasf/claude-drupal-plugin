@@ -1,10 +1,12 @@
 # Archivos de diferentes IDEs.
-/.idea/
-/.vscode/**
-!/.vscode/tasks.json
-!/.vscode/copilot-commit-instructions.md
+.idea/
+.vscode/**
+!.vscode/tasks.json
+!.vscode/copilot-commit-instructions.md
 .editorconfig
 *.un~
+
+.atl/
 
 # Logs.
 /logs/

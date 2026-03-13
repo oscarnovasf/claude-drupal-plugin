@@ -36,6 +36,7 @@ ddev launch
 {{PROJECT_NAME}}/
 ├── .ddev/              # Configuración de DDEV
 ├── config/sync/         # Archivos de configuración de Drupal
+├── tests/playwright/   # Conjunto de tests E2E de Playwright.
 ├── vendor/             # Dependencias de Composer (no en Git)
 ├── web/                # Raíz web de Drupal
 │   ├── core/           # Drupal core (no en Git)

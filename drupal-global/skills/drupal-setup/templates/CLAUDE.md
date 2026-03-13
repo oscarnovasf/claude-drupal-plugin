@@ -10,6 +10,7 @@ Sigue estas directrices al trabajar en este código.
   librerías, frameworks u otras herramientas.
 - No seas halagador ni te disculpes, haz tu tarea. Evita frases del tipo
   "Tienes razón...", "Lo siento..."
+- Mantén actualizado CLAUDE.md siempre que lo consideres necesario.
 
 ```mermaid
 flowchart TD
@@ -27,6 +28,7 @@ flowchart TD
 ## Comandos de Build/Lint/Test
 
 - **Build**: `ddev composer install`
+- **Actualizar**: `ddev composer update --no-security-blocking`
 - **Instalar**: `ddev drush site:install --existing-config`
 - **Lint**:
   - Si el proyecto tiene `/phpcs.xml` o `/phpcs.xml.dist`: `ddev exec phpcs`
@@ -42,7 +44,6 @@ flowchart TD
 
 - **Exportar configuración**: `ddev drush config:export -y`
 - **Importar configuración**: `ddev drush config:import -y`
-- **Importar configuración parcial**: `ddev drush config:import --partial --source=web/modules/custom/mimodulo/config/install`
 - **Verificar configuración**: `ddev drush config:export --diff`
 - **Ver detalles de config**: `ddev drush config:get [nombre.config]`
 - **Cambiar valor de config**: `ddev drush config:set [nombre.config] [clave] [valor]`
@@ -104,7 +105,14 @@ Este proyecto usa DDEV para desarrollo local. Todos los comandos deben ir prefij
 ## Desarrollo Orientado a Configuración
 
 Cuando sea posible, realizar cambios mediante archivos de configuración en lugar
-de interacciones con la base de datos:
+de interacciones con la base de datos.
+
+Con este enfoque debes preguntar previamente si queremos hacer un `ddev drush cex`
+para tener la configuración actualizada.
+
+Tener en cuenta que este enfoque puede dar problemas si se detecta el uso de
+módulos como "config_split". En caso de no poder usar YAML, ofrece alternativas,
+por ejemplo, usando drush y pregunta al usuario si está de acuerdo.
 
 1. **Añadir un tipo de contenido**: Crear archivos YAML en `config/sync/` o `web/modules/custom/mimodulo/config/install/`
 2. **Añadir campos**: Crear YAML de configuración de campos

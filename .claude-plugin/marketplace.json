@@ -32,6 +32,7 @@
                 "./drupal-global/hooks/hooks.json"
             ],
             "mcpServers": "./drupal-global/.mcp.json",
+            "outputStyles": "./drupal-global/output-styles/",
             "strict": false
         },
         {

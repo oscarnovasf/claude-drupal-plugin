@@ -53,12 +53,17 @@ drupal-tools/
 │   ├── commands/
 │   │   ├── drupal-setup.md         # Comando para invocar la skill drupal-setup
 │   │   └── update-changelog.md     # Comando para gestionar CHANGELOG.md
+│   ├── output-styles/
+│   │   └── onovasdev.md            # Estilo de salida personalizado (registrado globalmente)
 │   ├── skills/
 │   │   ├── drupal-setup/           # Skill de configuración de proyectos Drupal
 │   │   │   ├── SKILL.md            # Instrucciones de la skill
 │   │   │   └── templates/          # Plantillas (CLAUDE.md, README.md)
-│   │   └── change-name/            # Skill de renombrado de módulos/temas
-│   │       └── SKILL.md            # Instrucciones de la skill
+│   │   ├── change-name/            # Skill de renombrado de módulos/temas
+│   │   │   └── SKILL.md            # Instrucciones de la skill
+│   │   └── config-ia/              # Skill de configuración de Claude Code para el proyecto
+│   │       ├── SKILL.md            # Instrucciones de la skill
+│   │       └── templates/          # Plantillas (settings.onovas.json, scripts/)
 │   └── hooks/
 │       ├── hooks.json              # Configuración de hooks compartidos
 │       └── scripts/
@@ -101,7 +106,7 @@ graph TB
         mcp["📦 MCPs<br/>Context7, Obsidian, Playwright"]
         agent_g["🤖 Agent: context7"]
         cmd_g["⚡ Commands<br/>drupal-setup, update-changelog"]
-        skill_g["🛠️ Skills<br/>drupal-setup, change-name"]
+        skill_g["🛠️ Skills<br/>drupal-setup, change-name, config-ia"]
         hook_g["🛡️ Hooks: protección base"]
     end
 
@@ -242,6 +247,7 @@ Contiene todos los MCPs, agentes, comandos y skills compartidos.
 |-------|-------------|
 | **drupal-setup** | Ciclo de vida completo de desarrollo Drupal: detección de escenario, configuración de entorno, generación de CLAUDE.md y README.md adaptados al proyecto, instalación de Drupal con DDEV. Incluye plantillas en `templates/`. |
 | **change-name** | Renombra completamente un módulo o tema de Drupal. Puede ejecutarse desde la raíz del proyecto (busca y selecciona módulos/temas custom) o desde la carpeta del módulo/tema. Actualiza nombres de archivos, contenido interno y renombra la carpeta del proyecto. Maneja ambas variantes (snake_case y kebab-case). |
+| **config-ia** | Configura Claude Code para el proyecto actual: instala el script de statusline en `.claude/scripts/` y aplica los settings locales en `.claude/settings.local.json`. El output-style `onovasdev` se registra globalmente con el plugin. |
 
 ### Hooks de protección base
 
@@ -309,52 +315,154 @@ compartidos, protege:
 
 ### Variables de entorno
 
-Los MCPs compartidos pueden requerir configuración adicional.
+Los MCPs compartidos pueden requerir configuración adicional mediante variables de entorno.
 
 #### Context7 (opcional)
 
 Context7 funciona sin API key (con límites de rate). Para obtener cuota
-adicional, genera tu key en [context7.com](https://context7.com) y añade la
-siguiente variable a tu `~/.zshrc` o `~/.zshenv`:
-
-```bash
-export CONTEXT7_API_KEY="tu-api-key-aquí"
-```
+adicional, genera tu key en [context7.com](https://context7.com) y configura la
+variable de entorno `CONTEXT7_API_KEY`.
 
 #### Obsidian (opcional)
 
-El MCP de Obsidian necesita la ruta a tu vault. Añade la siguiente variable a tu
-`~/.zshrc` o `~/.zshenv`:
+El MCP de Obsidian necesita la ruta a tu vault de Obsidian. Configura la
+variable de entorno `OBSIDIAN_VAULT_PATH` con la ruta absoluta a tu vault.
+
+#### Configuración según tu sistema operativo
+
+##### macOS (shell zsh - por defecto)
+
+En macOS, Claude Code necesita que las variables estén disponibles en
+**aplicaciones gráficas**, no solo en el terminal. Por eso debes configurarlas
+en `~/.zprofile`:
 
 ```bash
+# Edita el archivo .zprofile
+nano ~/.zprofile
+
+# Añade las siguientes líneas:
+export CONTEXT7_API_KEY="tu-api-key-aquí"
 export OBSIDIAN_VAULT_PATH="/ruta/a/tu/vault/de/Obsidian"
+
+# Guarda el archivo (Ctrl+O, Enter, Ctrl+X)
+
+# Aplica los cambios (cierra sesión y vuelve a entrar, o ejecuta):
+source ~/.zprofile
 ```
 
-Ejemplo en macOS con iCloud:
-
+**Ejemplo con Obsidian en iCloud**:
 ```bash
 export OBSIDIAN_VAULT_PATH="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Obsidian/MiVault"
 ```
+
+> **¿Por qué `.zprofile` y no `.zshrc`?**
+> En macOS, las aplicaciones gráficas (como VSCode con Claude Code) no ejecutan `.zshrc`. Necesitas `.zprofile` para que las variables estén disponibles en todo el entorno del usuario, no solo en el terminal.
+
+##### Linux (shell bash o zsh)
+
+Dependiendo de tu shell, añade las variables al archivo correspondiente:
+
+**Para bash**:
+```bash
+# Edita .bashrc o .bash_profile
+nano ~/.bashrc
+
+# Añade las variables:
+export CONTEXT7_API_KEY="tu-api-key-aquí"
+export OBSIDIAN_VAULT_PATH="/ruta/a/tu/vault/de/Obsidian"
+
+# Aplica los cambios:
+source ~/.bashrc
+```
+
+##### Windows
+
+**PowerShell**:
+```powershell
+# Establece variables de entorno de usuario permanentes
+[System.Environment]::SetEnvironmentVariable('CONTEXT7_API_KEY', 'tu-api-key-aquí', 'User')
+[System.Environment]::SetEnvironmentVariable('OBSIDIAN_VAULT_PATH', 'C:\ruta\a\tu\vault\de\Obsidian', 'User')
+
+# O añádelas al perfil de PowerShell
+notepad $PROFILE
+
+# Añade en el archivo:
+$env:CONTEXT7_API_KEY = "tu-api-key-aquí"
+$env:OBSIDIAN_VAULT_PATH = "C:\ruta\a\tu\vault\de\Obsidian"
+```
+
+**CMD**:
+```cmd
+# Establece variables de entorno permanentes (requiere reiniciar)
+setx CONTEXT7_API_KEY "tu-api-key-aquí"
+setx OBSIDIAN_VAULT_PATH "C:\ruta\a\tu\vault\de\Obsidian"
+```
+
+#### Verificar la configuración
+
+Después de configurar las variables, verifica que están correctamente establecidas:
+
+**macOS/Linux**:
+```bash
+# Verifica las variables
+echo $CONTEXT7_API_KEY
+echo $OBSIDIAN_VAULT_PATH
+
+# Deben mostrar los valores configurados (no vacío)
+```
+
+**Windows PowerShell**:
+```powershell
+# Verifica las variables
+echo $env:CONTEXT7_API_KEY
+echo $env:OBSIDIAN_VAULT_PATH
+```
+
+> **Importante**: Después de configurar las variables, **reinicia Claude Code** (o reinicia VSCode/tu editor) para que los cambios surtan efecto.
 
 ### Permisos
 
 Los permisos se configuran a nivel de proyecto o usuario, no de plugin.
 Claude Code pedirá confirmación la primera vez que un MCP intente ejecutarse.
-Para pre-autorizar herramientas, configura los permisos en el scope que
-prefieras:
+
+Para pre-autorizar todas las herramientas de los MCPs instalados por
+`drupal-global`, configura los permisos en el scope que prefieras:
 
 ```json
 {
   "permissions": {
     "allow": [
-      "mcp__context7",
-      "mcp__playwright",
-      "mcp__obsidian__*"
+      "mcp__plugin_drupal-global_context7__*",
+      "mcp__plugin_drupal-global_playwright__*",
+      "mcp__plugin_drupal-global_obsidian__*"
     ],
     "deny": []
   }
 }
 ```
+
+**Herramientas específicas disponibles**:
+
+**Context7** (documentación de librerías):
+- `mcp__plugin_drupal-global_context7__resolve-library-id` - Buscar ID de librería
+- `mcp__plugin_drupal-global_context7__query-docs` - Consultar documentación
+
+**Playwright** (automatización de navegador):
+- `mcp__plugin_drupal-global_playwright__browser_navigate` - Navegar a URL
+- `mcp__plugin_drupal-global_playwright__browser_snapshot` - Capturar snapshot
+- `mcp__plugin_drupal-global_playwright__browser_click` - Hacer click
+- `mcp__plugin_drupal-global_playwright__browser_type` - Escribir texto
+- Y más herramientas de interacción con el navegador
+
+**Obsidian** (gestión de notas):
+- `mcp__plugin_drupal-global_obsidian__read_note` - Leer nota
+- `mcp__plugin_drupal-global_obsidian__write_note` - Escribir nota
+- `mcp__plugin_drupal-global_obsidian__search_notes` - Buscar notas
+- `mcp__plugin_drupal-global_obsidian__list_directory` - Listar directorio
+- Y más herramientas para gestionar el vault
+
+> **Tip**: Usa el comodín `*` para autorizar todas las herramientas de un MCP, o
+> especifica herramientas individuales para mayor control.
 
 | Scope | Archivo | Uso |
 |-------|---------|-----|

@@ -79,6 +79,7 @@ Según la opción seleccionada, seguir el flujo correspondiente a continuación.
 Ejecutar la verificación de CLAUDE.md (ver sección "Verificación de CLAUDE.md" más abajo).
 Ejecutar la verificación de README.md (ver sección "Verificación de README.md" más abajo).
 
+
 ### Paso 2: Detectar configuración DDEV y mostrar pasos manuales
 
 Verificar si ya existe `.ddev/config.yaml`:
@@ -242,6 +243,7 @@ ULI=$(ddev drush uli)
 
 Ejecutar la verificación de CLAUDE.md (ver sección "Verificación de CLAUDE.md" más abajo).
 Ejecutar la verificación de README.md (ver sección "Verificación de README.md" más abajo).
+
 
 ### Paso 2: Detener y eliminar base de datos
 
