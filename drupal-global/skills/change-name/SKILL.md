@@ -1,6 +1,7 @@
 ---
 name: change-name
 description: Renombra un módulo o tema de Drupal cambiando nombres de archivos y contenido
+disable-model-invocation: true
 ---
 
 # Skill de Renombrado de Módulos y Temas de Drupal
