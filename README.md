@@ -245,9 +245,11 @@ Contiene todos los MCPs, agentes, comandos y skills compartidos.
 
 | Skill | Descripción |
 |-------|-------------|
-| **drupal-setup** | Ciclo de vida completo de desarrollo Drupal: detección de escenario, configuración de entorno, generación de CLAUDE.md y README.md adaptados al proyecto, instalación de Drupal con DDEV. Incluye plantillas en `templates/`. |
+| **drupal-setup** | Ciclo de vida completo de desarrollo Drupal: detección de escenario, configuración de entorno, generación de README.md adaptado al proyecto, instalación de Drupal con DDEV. Incluye plantillas en `templates/`. |
 | **change-name** | Renombra completamente un módulo o tema de Drupal. Puede ejecutarse desde la raíz del proyecto (busca y selecciona módulos/temas custom) o desde la carpeta del módulo/tema. Actualiza nombres de archivos, contenido interno y renombra la carpeta del proyecto. Maneja ambas variantes (snake_case y kebab-case). |
-| **config-ia** | Configura Claude Code para el proyecto actual: instala el script de statusline en `.claude/scripts/` y aplica los settings locales en `.claude/settings.local.json`. El output-style `onovasdev` se registra globalmente con el plugin. |
+| **config-ia** | Configura Claude Code para el proyecto actual: instala el script de statusline en `.claude/scripts/`, aplica los settings locales en `.claude/settings.local.json` e instala `CLAUDE.md` con el rol de orquestador y flujo SDD. El output-style `onovasdev` se registra globalmente con el plugin. |
+| **drupal-reference** | Guía de referencia de comandos Drush, Composer, DDEV y buenas prácticas de Drupal. Consulta rápida para convenciones, hooks y patrones de desarrollo. |
+| **playwright** | Plantillas y helpers para automatización de tests con Playwright en proyectos Drupal. |
 
 ### Hooks de protección base
 
@@ -563,8 +565,8 @@ claude plugin install drupal-backend@drupal-tools
 
 [mi-web]: https://oscarnovas.com "for developers"
 
-[version]: v1.1.0
-[version-badge]: https://img.shields.io/badge/Versión-1.1.0-blue.svg
+[version]: v1.2.0
+[version-badge]: https://img.shields.io/badge/Versión-1.2.0-blue.svg
 
 [license]: LICENSE.md
 [license-badge]: https://img.shields.io/badge/Licencia-GPLv3+-green.svg "Leer la licencia"

@@ -6,6 +6,26 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 > Ver TODO.md
 
 ---
+## [v1.2.0] - 2026-03-13
+> Nuevas skills especializadas y mejoras en la configuración de proyectos.
+
+### Añadido
+- Nueva skill `config-ia`: configura Claude Code en proyectos Drupal (statusline, settings locales e instalación del `CLAUDE.md` del proyecto)
+- Nueva skill `drupal-reference`: guía de referencia de comandos, hooks y buenas prácticas de Drupal
+- Nueva skill `playwright`: plantillas y helpers para automatización de tests con Playwright
+- Plantilla `CLAUDE.md` para proyectos Drupal con rol de orquestador de agentes y flujo SDD
+- Opción `disable-model-invocation` en las skills para controlar la invocación del modelo
+- `RELEASE.md` con guía paso a paso para publicar nuevas versiones
+
+### Cambios
+- Instalación del `CLAUDE.md` del proyecto movida de la skill `drupal-setup` a `config-ia` (responsabilidad única)
+- Mejorada claridad y estructura del output style `onovasdev`
+- Actualizada descripción del agente `context7`
+
+### Errores
+- Corregida ruta del script `protect-files.sh` en la configuración de hooks
+
+---
 ## [v1.1.0] - 2026-02-15
 > Refactorización de arquitectura: sistema modular de 3 plugins independientes.
 
