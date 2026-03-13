@@ -1,6 +1,7 @@
 ---
 name: drupal-setup
 description: Ciclo de vida completo de desarrollo Drupal - configuración, incorporación y mantenimiento
+disable-model-invocation: true
 ---
 
 # Skill de Configuración y Desarrollo de Proyectos Drupal
@@ -14,7 +15,6 @@ Esta skill te permite:
 - **Configurar proyectos Drupal EXISTENTES** - Incorporación a proyectos Drupal existentes
 - **Mantener y actualizar** - Mantener el entorno local sincronizado con los cambios del equipo
 - Configurar con buenas prácticas organizacionales
-- Generar documentación completa (CLAUDE.md)
 
 ## Detección de Escenario
 
@@ -76,9 +76,7 @@ Según la opción seleccionada, seguir el flujo correspondiente a continuación.
 
 ### Paso 1: Verificar y aplicar documentación del proyecto
 
-Ejecutar la verificación de CLAUDE.md (ver sección "Verificación de CLAUDE.md" más abajo).
 Ejecutar la verificación de README.md (ver sección "Verificación de README.md" más abajo).
-
 
 ### Paso 2: Detectar configuración DDEV y mostrar pasos manuales
 
@@ -241,9 +239,7 @@ ULI=$(ddev drush uli)
 
 ### Paso 1: Verificar y aplicar documentación del proyecto
 
-Ejecutar la verificación de CLAUDE.md (ver sección "Verificación de CLAUDE.md" más abajo).
 Ejecutar la verificación de README.md (ver sección "Verificación de README.md" más abajo).
-
 
 ### Paso 2: Detener y eliminar base de datos
 
@@ -328,53 +324,6 @@ ULI=$(ddev drush uli)
 
 ---
 
-## Verificación de CLAUDE.md
-
-**Este paso se ejecuta al inicio de ambos flujos (Configuración Inicial y Reinicio).**
-
-Verificar el estado de `CLAUDE.md` en el proyecto:
-
-### Caso 1: No existe CLAUDE.md
-
-1. Detectar los valores para los placeholders de la plantilla:
-   - `{{PROJECT_NAME}}`: Extraer del campo `name` en `.ddev/config.yaml`. Si no existe, usar el nombre del directorio actual.
-   - `{{DRUPAL_VARIANT}}`: Verificar `composer.json` — si contiene `drupal/cms` → "Drupal CMS", en caso contrario → "Drupal 11".
-2. Leer la plantilla `templates/CLAUDE.md`.
-3. Reemplazar los placeholders con los valores detectados.
-4. **Analizar el proyecto y enriquecer el CLAUDE.md** (como si se ejecutase un `init`):
-   - Examinar la estructura del proyecto: módulos custom (`web/modules/custom/`), temas custom (`web/themes/custom/`), perfiles, etc.
-   - Detectar herramientas de calidad configuradas: buscar `phpcs.xml`, `phpcs.xml.dist`, `phpstan.neon`, `phpstan.neon.dist`, `phpunit.xml`, `phpunit.xml.dist` en la raíz del proyecto.
-   - Detectar comandos DDEV personalizados: buscar archivos en `.ddev/commands/`.
-   - Revisar `composer.json` para identificar dependencias relevantes (módulos contrib instalados, herramientas de desarrollo).
-   - Revisar si existe documentación existente (`README.md`, `.lando.yml`, `Makefile`, etc.) que aporte contexto.
-   - Añadir al final del CLAUDE.md una sección `## Información del Proyecto` con:
-     - Listado de módulos custom encontrados con breve descripción (extraída de sus `.info.yml`).
-     - Listado de temas custom encontrados.
-     - Herramientas de calidad detectadas y sus comandos específicos según la configuración encontrada.
-     - Comandos DDEV personalizados disponibles.
-     - Cualquier otra información relevante descubierta durante el análisis.
-5. Crear el archivo `CLAUDE.md` en la raíz del proyecto.
-6. Informar al usuario: "Se ha creado CLAUDE.md con la configuración de la skill y la información específica del proyecto."
-
-### Caso 2: Existe CLAUDE.md sin marca de la skill
-
-Verificar si el contenido de `CLAUDE.md` contiene la cadena `Guía de Claude para`. Si NO la contiene, significa que existe
-un `CLAUDE.md` pero no fue generado por esta skill.
-
-Usar `AskUserQuestion` para preguntar al usuario:
-- **Reemplazar**: Sobreescribir el CLAUDE.md actual con la plantilla de la skill.
-- **Mantener**: Conservar el CLAUDE.md actual sin modificaciones.
-
-Si el usuario elige reemplazar, proceder como en el Caso 1.
-
-### Caso 3: Existe CLAUDE.md con marca de la skill
-
-Si `CLAUDE.md` contiene la cadena `Guía de Claude para`, ya fue configurado por esta skill.
-
-No hacer nada. Informar al usuario: "CLAUDE.md ya está configurado."
-
----
-
 ## Verificación de README.md
 
 **Este paso se ejecuta al inicio de ambos flujos (Configuración Inicial y Reinicio).**
@@ -419,7 +368,6 @@ Todos los archivos de plantilla se encuentran en el subdirectorio `templates/`:
 - `gitignore` - .gitignore completo para Drupal
 - `ddev-config.yaml` - Plantilla de configuración DDEV
 - `README.md` - Plantilla de documentación del proyecto
-- `CLAUDE.md` - Plantilla de guía para Claude Code
 
 Al usar plantillas:
 1. Leer el archivo de plantilla
@@ -440,7 +388,6 @@ Una configuración exitosa incluye:
 - ✓ Todos los archivos creados sin errores
 - ✓ Dependencias de Composer instaladas
 - ✓ Archivos de configuración correctamente estructurados
-- ✓ CLAUDE.md presente y configurado en el proyecto
 - ✓ README.md presente en el proyecto
 - ✓ Documentación completa y precisa
 - ✓ (Si instalación completa) Drupal instalado y configuración inicial exportada
