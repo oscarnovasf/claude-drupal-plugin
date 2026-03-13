@@ -1,6 +1,9 @@
 ---
 name: config-ia
-description: Configura Claude Code para el proyecto actual - statusline, output-style y settings locales
+description: >
+  Configura Claude Code para el proyecto actual - statusline, output-style y settings locales
+  Trigger: Manual, mediante comando específico.
+disable-model-invocation: true
 ---
 
 # Skill de Configuración de Claude Code para el Proyecto
@@ -56,7 +59,35 @@ Copiar `templates/scripts/statusline.sh` a `.claude/scripts/statusline.sh` del p
 chmod +x .claude/scripts/statusline.sh
 ```
 
-### Paso 3: Aplicar settings locales
+### Paso 3: Instalar CLAUDE.md del proyecto
+
+1. **Obtener `PROJECT_NAME`**: extraer del campo `name` en `.ddev/config.yaml`.
+   Si no existe, usar el nombre del directorio actual (`basename $PWD`).
+
+2. **Obtener `DRUPAL_VARIANT`**:
+   - Leer `composer.json` y revisar las dependencias (`require`) para detectar distribuciones conocidas:
+     - `drupal/commerce` → `"Commerce"`
+     - `drupal/contenta_jsonapi` → `"Headless/Contenta"`
+     - `drupal/lightning` → `"Lightning"`
+     - `drupal/opigno_lms` → `"Opigno LMS"`
+   - Si ninguna coincide, extraer la versión principal de `drupal/core-recommended` o `drupal/core`
+     (ej. `^10.3.x-dev` → `"10"`, `^11.0` → `"11"`).
+   - Si no se puede determinar, usar `"estándar"`.
+
+3. **Comprobar si ya existe `CLAUDE.md`** en la raíz del proyecto:
+   - **Si existe**: mostrar aviso y preguntar al usuario si desea sobreescribirlo.
+     Si responde que no → **omitir este paso**.
+   - **Si NO existe**: continuar.
+
+4. Leer la plantilla `templates/CLAUDE.md`.
+
+5. Reemplazar en el contenido:
+   - `{{PROJECT_NAME}}` → valor obtenido en el punto 1
+   - `{{DRUPAL_VARIANT}}` → valor obtenido en el punto 2
+
+6. Escribir el resultado en `CLAUDE.md` en la raíz del proyecto.
+
+### Paso 4: Aplicar settings locales
 
 1. Leer la plantilla `templates/settings.onovas.json`.
 
@@ -72,7 +103,7 @@ chmod +x .claude/scripts/statusline.sh
 
 5. Escribir el resultado en `.claude/settings.local.json`.
 
-### Paso 4: Informar del resultado
+### Paso 5: Informar del resultado
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -81,6 +112,7 @@ chmod +x .claude/scripts/statusline.sh
 
 📝 Cambios realizados:
    ✓ Script de statusline instalado en .claude/scripts/statusline.sh
+   ✓ CLAUDE.md instalado en la raíz del proyecto
    ✓ Settings locales actualizados en .claude/settings.local.json
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -92,11 +124,13 @@ chmod +x .claude/scripts/statusline.sh
 
 Una configuración exitosa incluye:
 - ✓ `.claude/scripts/statusline.sh` presente y con permisos de ejecución
+- ✓ `CLAUDE.md` creado en la raíz del proyecto con `{{PROJECT_NAME}}` y `{{DRUPAL_VARIANT}}` sustituidos
 - ✓ `.claude/settings.local.json` creado o actualizado con la configuración del proyecto
 - ✓ El placeholder `{{PROJECT_PATH}}` sustituido por la ruta real del proyecto
 
 ## Plantillas
 
 Los archivos de plantilla utilizados por esta skill:
+- `templates/CLAUDE.md` - Guía de Claude para el proyecto (orquestador + flujo SDD)
 - `templates/settings.onovas.json` - Configuración local de Claude Code para el proyecto
 - `templates/scripts/statusline.sh` - Script de statusline para Claude Code

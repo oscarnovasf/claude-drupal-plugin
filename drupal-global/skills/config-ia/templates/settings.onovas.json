@@ -76,7 +76,6 @@
             "Bash(git pull:*)",
             "Bash(which:*)",
             "Bash(gh:*)",
-            "Bash(code:*)",
             "Bash(cat:*)",
             "Bash(ls:*)",
             "Bash(touch:*)",
