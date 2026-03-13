@@ -7,7 +7,7 @@
           {
             "name": "protect-files-shared",
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/shared/hooks/scripts/protect-files.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/drupal-global/hooks/scripts/protect-files.sh"
           }
         ]
       }
