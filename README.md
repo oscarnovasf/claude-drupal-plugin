@@ -195,23 +195,26 @@ claude plugin install drupal-backend@drupal-tools --scope project
 claude plugin install drupal-backend@drupal-tools --scope local
 ```
 
-### 4. Actualizar el plugin
+---
+
+## Actualización
 
 Para actualizar a la última versión publicada:
 
-```bash
-# Actualizar drupal-global (hazlo primero si tienes backend o frontend instalados)
-claude plugin update drupal-global@drupal-tools
+> **Nota**: `claude plugin update` no sincroniza el repositorio del marketplace 
+  automáticamente, por lo que es necesario hacerlo manualmente antes de actualizar.
 
-# Actualizar un plugin específico
+```bash
+# 1. Actualizar el repo del marketplace
+cd ~/.claude/plugins/marketplaces/drupal-tools && git pull origin main
+
+# 2. Actualizar los plugins
+claude plugin update drupal-global@drupal-tools
 claude plugin update drupal-backend@drupal-tools
 claude plugin update drupal-frontend@drupal-tools
 
-# Actualizar todos los plugins del marketplace
-claude plugin update --all
+# 3. Reinicia Claude Code para aplicar los cambios.
 ```
-
-> **Nota**: El comando `update` descarga e instala la versión más reciente desde el marketplace. Si has modificado el plugin localmente, esos cambios se perderán. Para desarrollo activo del plugin, consulta la sección [Desarrollo](#desarrollo).
 
 ---
 
