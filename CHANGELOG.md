@@ -6,7 +6,7 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 > Ver TODO.md
 
 ---
-## [v1.2.0] - 2026-03-13
+## [v1.2.0] - 2026-03-14
 > Nuevas skills especializadas y mejoras en la configuración de proyectos.
 
 ### Añadido
