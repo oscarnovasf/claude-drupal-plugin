@@ -15,6 +15,7 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 - Nueva skill `playwright`: plantillas y helpers para automatización de tests con Playwright
 - Plantilla `CLAUDE.md` para proyectos Drupal con rol de orquestador de agentes y flujo SDD
 - Opción `disable-model-invocation` en las skills para controlar la invocación del modelo
+- Variable de entorno para activar "Agent Teams"
 - `RELEASE.md` con guía paso a paso para publicar nuevas versiones
 
 ### Cambios

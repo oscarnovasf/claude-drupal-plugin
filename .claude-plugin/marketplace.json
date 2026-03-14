@@ -6,14 +6,14 @@
     },
     "metadata": {
         "description": "Colección de plugins de Claude Code para desarrollo con Drupal: backend y frontend, con componentes compartidos.",
-        "version": "1.1.0"
+        "version": "1.2.0"
     },
     "plugins": [
         {
             "name": "drupal-global",
             "source": "./",
             "description": "Componentes globales para desarrollo con Drupal: MCPs (Context7, Obsidian, Playwright), agentes, comandos y skills comunes para backend y frontend.",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "author": {
                 "name": "Óscar Novás",
                 "email": "hola@oscarnovas.com"
@@ -39,7 +39,7 @@
             "name": "drupal-backend",
             "source": "./",
             "description": "Plugin especializado en desarrollo backend con Drupal: APIs, servicios, plugins, hooks, migraciones, configuración y buenas prácticas del lado servidor. Requiere drupal-global (instalar por separado).",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "author": {
                 "name": "Óscar Novás",
                 "email": "hola@oscarnovas.com"
@@ -63,7 +63,7 @@
             "name": "drupal-frontend",
             "source": "./",
             "description": "Plugin especializado en desarrollo frontend con Drupal: theming, Twig, CSS/JS, componentes, bibliotecas, responsive design y accesibilidad. Requiere drupal-global (instalar por separado).",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "author": {
                 "name": "Óscar Novás",
                 "email": "hola@oscarnovas.com"
