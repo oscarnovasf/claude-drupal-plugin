@@ -10,6 +10,9 @@
         "command": "{{PROJECT_PATH}}/.claude/scripts/statusline.sh",
         "padding": 0
     },
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    },
     "spinnerVerbs": {
         "mode": "replace",
         "verbs": [
