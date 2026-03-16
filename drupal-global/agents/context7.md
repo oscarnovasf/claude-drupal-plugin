@@ -1,7 +1,7 @@
 ---
 name: context7
 description: Especialista en documentación oficial y actualizada de librerías/frameworks. Úsalo cuando la tarea pida sintaxis exacta, cambios entre versiones, migraciones, deprecaciones, buenas prácticas o validación de APIs vigentes.
-tools: read, search, web, mcp__plugin_drupal-global_context7/*
+tools: Read, Grep, WebSearch, WebFetch, mcp__plugin_drupal-global_context7/*
 model: sonnet
 color: red
 ---

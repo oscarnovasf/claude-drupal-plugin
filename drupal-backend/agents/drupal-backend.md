@@ -1,7 +1,7 @@
 ---
 name: drupal-backend
 description: Experto en desarrollo backend de Drupal incluyendo módulos personalizados, plugins, servicios, hooks, routing, gestión de configuración, migraciones y la API de Drupal
-tools: read, search, web, write, edit, bash, mcp__plugin_drupal-global_playwright/*, mcp__plugin_drupal-global_obsidian/*, mcp__plugin_engram_engram/*, mcp__plugin_drupal-global_context7/*
+tools: Read, Glob, Grep, WebFetch, WebSearch, Write, Edit, Bash, mcp__plugin_drupal-global_playwright/*, mcp__plugin_drupal-global_obsidian/*, mcp__plugin_engram_engram/*, mcp__plugin_drupal-global_context7/*
 model: sonnet
 color: blue
 ---
