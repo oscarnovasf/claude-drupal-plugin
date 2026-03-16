@@ -1,7 +1,7 @@
 ---
 name: drupal-backend
 description: Experto en desarrollo backend de Drupal incluyendo módulos personalizados, plugins, servicios, hooks, routing, gestión de configuración, migraciones y la API de Drupal
-tools: read, search, web, context7/*
+tools: read, search, web, context7/*, Write, Edit, Bash
 model: sonnet
 color: blue
 ---
