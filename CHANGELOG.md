@@ -6,6 +6,14 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 > Ver TODO.md
 
 ---
+## [v1.3.0] - 2026-03-16
+> Mejoras en el agente drupal-backend: soporte para invocar skills del plugin.
+
+### Añadido
+- Herramienta `Skill` al agente `drupal-backend` para invocar skills del plugin
+- Documentación de la skill `drupal-reference` en el agente `drupal-backend` con casos de uso concretos
+
+---
 ## [v1.2.0] - 2026-03-14
 > Nuevas skills especializadas y mejoras en la configuración de proyectos.
 

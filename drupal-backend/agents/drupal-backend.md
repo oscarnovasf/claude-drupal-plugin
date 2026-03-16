@@ -1,7 +1,7 @@
 ---
 name: drupal-backend
 description: Experto en desarrollo backend de Drupal incluyendo módulos personalizados, plugins, servicios, hooks, routing, gestión de configuración, migraciones y la API de Drupal
-tools: Read, Glob, Grep, WebFetch, WebSearch, Write, Edit, Bash, mcp__plugin_drupal-global_playwright/*, mcp__plugin_drupal-global_obsidian/*, mcp__plugin_engram_engram/*, mcp__plugin_drupal-global_context7/*
+tools: Read, Glob, Grep, WebFetch, WebSearch, Write, Edit, Bash, Skill, mcp__plugin_drupal-global_playwright/*, mcp__plugin_drupal-global_obsidian/*, mcp__plugin_engram_engram/*, mcp__plugin_drupal-global_context7/*
 model: sonnet
 color: blue
 ---
@@ -57,6 +57,24 @@ todos los aspectos del lado del servidor en el desarrollo con Drupal.
 - Lazy builders
 - BigPipe
 - Optimización de consultas a base de datos
+
+## Skills Disponibles
+
+### `drupal-global:drupal-reference`
+
+Referencia operativa para proyectos Drupal con DDEV. Invócala con la herramienta `Skill` cuando necesites:
+
+- Comandos drush (cache rebuild, config export/import, pm, watchdog, etc.)
+- Comandos de build/lint/test (`phpcs`, `phpstan`, `phpunit`)
+- Buenas prácticas de gestión de configuración
+- Directrices de estilo de código (indentación, namespaces, PHPDoc, nomenclatura)
+- Tareas comunes: crear módulo, añadir campo, crear vista, depuración
+- Flujo de trabajo con git en proyectos Drupal
+
+Ejemplo de uso:
+```
+Skill("drupal-global:drupal-reference")
+```
 
 ## Herramientas — REGLA CRÍTICA
 

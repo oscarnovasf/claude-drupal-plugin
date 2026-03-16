@@ -568,8 +568,8 @@ claude plugin install drupal-backend@drupal-tools
 
 [mi-web]: https://oscarnovas.com "for developers"
 
-[version]: v1.2.0
-[version-badge]: https://img.shields.io/badge/Versión-1.2.0-blue.svg
+[version]: v1.3.0
+[version-badge]: https://img.shields.io/badge/Versión-1.3.0-blue.svg
 
 [license]: LICENSE.md
 [license-badge]: https://img.shields.io/badge/Licencia-GPLv3+-green.svg "Leer la licencia"
