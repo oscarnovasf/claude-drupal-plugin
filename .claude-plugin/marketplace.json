@@ -33,7 +33,7 @@
             ],
             "mcpServers": "./drupal-global/.mcp.json",
             "outputStyles": "./drupal-global/output-styles/",
-            "strict": false
+            "strict": true
         },
         {
             "name": "drupal-backend",
@@ -57,7 +57,7 @@
             "hooks": [
                 "./drupal-backend/hooks/hooks.json"
             ],
-            "strict": false
+            "strict": true
         },
         {
             "name": "drupal-frontend",
@@ -81,7 +81,7 @@
             "hooks": [
                 "./drupal-frontend/hooks/hooks.json"
             ],
-            "strict": false
+            "strict": true
         }
     ]
 }
