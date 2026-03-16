@@ -45,9 +45,6 @@
                 "email": "hola@oscarnovas.com"
             },
             "keywords": ["drupal", "backend", "php", "api", "services", "migrations"],
-            "commands": [
-                "./drupal-backend/commands/"
-            ],
             "agents": [
                 "./drupal-backend/agents/drupal-backend.md"
             ],
